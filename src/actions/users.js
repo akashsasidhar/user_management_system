@@ -17,18 +17,69 @@ export const signIn = async (data) => {
 
   return result;
 };
-export const uploadPhoto = async (data) => {
-  console.log("hi");
+export const uploadPhoto = async (picData, id) => {
   try {
     const result = await axios.post(
       "http://localhost:5000/api/user/photoUpload",
-      data,
+      picData,
       {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
     );
+    console.log(id);
+
+    const picResult = await showPhoto(id);
+    console.log({ data: result.data, pic: picResult });
+    return { data: result.data, pic: picResult.data };
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const showPhoto = async (id) => {
+  try {
+    const result = await axios.get(
+      `http://localhost:5000/api/user/photo/${id}`
+    );
     console.log(result);
-    return result;
+    return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const collectUser = async (id) => {
+  try {
+    const result = await axios.get(
+      `http://localhost:5000/api/user/userDetails/${id}`
+    );
+    console.log(result);
+    return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const updateUser = async (data) => {
+  try {
+    const result = await axios.post(
+      `http://localhost:5000/api/user/update`,
+      data
+    );
+    console.log(result);
+    return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const changePassword = async (data) => {
+  try {
+    const result = await axios.post(
+      `http://localhost:5000/api/user/changePassword`,
+      data
+    );
+    console.log(result);
+    return result.data;
   } catch (error) {
     console.error(error);
   }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signIn } from "../actions/users";
 
@@ -27,6 +27,9 @@ export const LoginUser = () => {
       password: "",
     });
   };
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
   return (
     <div className="container-fluid auth-wrapper g-0">
       <div className=" row d-flex ">

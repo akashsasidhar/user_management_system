@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signUp } from "../actions/users";
+import { validatePassword } from "../utils/utils";
 
 export const CreateUser = () => {
   const [formData, setFormData] = useState({
@@ -18,30 +19,22 @@ export const CreateUser = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const data = formData;
+    let res;
     console.log(data);
-    const res = await signUp(data);
-    if (res.status == 200) {
-      navigate("/sign-in");
+    const passValid = validatePassword(formData?.password);
+    if (passValid) {
+      res = await signUp(data);
+      if (res.status == 200) {
+        navigate("/sign-in");
+      }
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+      });
     }
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-    });
   };
 
-  const handleConfirmDelete = (companyId) => {
-    confirmed = window.confirm("Are you sure you want to delete this Company?");
-    console.log(companyId, "company");
-    if (confirmed) {
-      handleDelete(companyId);
-    }
-  };
-  const handleDelete = async (id) => {
-    // console.log(id, "companya");
-    // await deleteCompany(id);
-    // await fetchData();
-  };
   useEffect(() => {
     // fetchData();
   }, []);
