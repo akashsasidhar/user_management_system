@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signUp } from "../actions/users";
 import { validatePassword } from "../utils/utils";
+import Toast from "./common/toast-msg";
 
 export const CreateUser = () => {
   const [formData, setFormData] = useState({
@@ -9,35 +10,46 @@ export const CreateUser = () => {
     email: "",
     password: "",
   });
+  const [showToast, setShowToast] = useState(false);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("");
   const navigate = useNavigate();
   let confirmed = false;
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
+  const handleButtonClick = (message, sts) => {
+    setMessage(message);
+    setStatus(sts);
+    setShowToast(true);
+  };
 
+  const handleToastClose = () => {
+    setShowToast(false);
+    setMessage("");
+  };
   const onSubmit = async (e) => {
     e.preventDefault();
     const data = formData;
     let res;
     console.log(data);
     const passValid = validatePassword(formData?.password);
-    if (passValid) {
+    if (passValid == true) {
       res = await signUp(data);
       if (res.status == 200) {
         navigate("/sign-in");
       }
+      handleButtonClick(res.data.message, "success");
       setFormData({
         name: "",
         email: "",
         password: "",
       });
+    } else {
+      handleButtonClick(passValid, "error");
     }
   };
-
-  useEffect(() => {
-    // fetchData();
-  }, []);
 
   return (
     <>
@@ -105,6 +117,9 @@ export const CreateUser = () => {
             </form>
           </div>
         </div>
+        {showToast && (
+          <Toast message={message} status={status} onClose={handleToastClose} />
+        )}
       </div>
     </>
   );

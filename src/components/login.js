@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signIn } from "../actions/users";
+import { validateJWT } from "../utils/utils";
 
-export const LoginUser = () => {
+export const LoginUser = ({ handleLogout }) => {
+  const location = useLocation();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [decodedToken, setdecodedToken] = useState(null);
 
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -28,7 +32,18 @@ export const LoginUser = () => {
     });
   };
   useEffect(() => {
-    localStorage.clear();
+    const token = validateJWT(navigate);
+    setdecodedToken(token);
+  }, []);
+  useEffect(() => {
+    if (location.pathname === "/log-out") {
+      localStorage.clear();
+      handleLogout();
+    }
+    if (Date.now() < decodedToken?.exp * 1000) {
+      navigate("/home");
+    }
+    handleLogout();
   }, []);
   return (
     <div className="container-fluid auth-wrapper g-0">

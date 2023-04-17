@@ -14,14 +14,17 @@ const Toast = ({ message, onClose, status }) => {
 
   return (
     <div
-      className={`toast ${show ? "show" : ""}`}
-      style={{
+      id="snackbar-container"
+      className={`snackbar-parent ${show ? "show" : ""}`}
+      /* style={{
         marginTop: "10%",
         color:
           status == "success" ? "green" : status == "error" ? "red" : "black",
-      }}
+      }} */
     >
-      <div className="toast-body">{message}</div>
+      <div id="snackbar" className={`snackbar-content`}>
+        {message}
+      </div>
     </div>
   );
 };

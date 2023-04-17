@@ -50,3 +50,50 @@
     transform: rotate(360deg);
   }
 }
+.snackbar-content {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 16px;
+  max-width: 90%;
+}
+.snackbar-parent {
+  visibility: hidden;
+  position: fixed;
+  z-index: 50;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.show {
+  visibility: visible !important; /* Show the snackbar */
+  -webkit-animation: fadein 0.5s, fadeout 1.5s 2.5s;
+  animation: fadein 0.5s, fadeout 1.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}

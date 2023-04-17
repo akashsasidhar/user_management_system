@@ -13,6 +13,7 @@ export const signUp = async (data) => {
 export const signIn = async (data) => {
   const result = await axios.post(`http://localhost:5000/api/user/login`, data);
   console.log(result.data.data.token);
+  localStorage.clear();
   localStorage.setItem("AUTH_TOKEN", result.data.data.token);
 
   return result;
@@ -82,5 +83,28 @@ export const changePassword = async (data) => {
     return result.data;
   } catch (error) {
     console.error(error);
+  }
+};
+export const fetchLead = async (id) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/user/getLeads",
+      { id: id }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateLead = async (data) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/user/updateLeads",
+      data
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
   }
 };

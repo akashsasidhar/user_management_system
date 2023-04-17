@@ -7,10 +7,12 @@ import { LoginUser } from "./components/login";
 import { UserProfile } from "./components/user_profile";
 import { validateJWT } from "./utils/utils";
 import { ChangePassword } from "./components/change-password";
+import LeadsPage from "./components/lead";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   let decodedToken;
+  let confirmed = false;
   const handleLogin = () => {
     setIsLoggedIn(true);
     console.log(isLoggedIn, "login");
@@ -18,13 +20,21 @@ function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
   };
+  const handleConfirmDelete = (companyId) => {
+    confirmed = window.confirm("Are you sure you want to logout?");
+    if (confirmed) {
+      navigate("/log-out");
+    }
+  };
   const navigate = useNavigate();
   useEffect(() => {
     decodedToken = validateJWT(navigate);
+  }, []);
+  useEffect(() => {
     if (decodedToken?.id) {
       handleLogin();
     }
-  }, [navigate]);
+  }, []);
   return (
     <div className="App">
       {isLoggedIn && (
@@ -48,18 +58,41 @@ function App() {
                     Change Password
                   </Link>
                 </li>
+                <li>
+                  <Link className="nav-link" to={"/leads"}>
+                    Leads
+                  </Link>
+                </li>
+                <li>
+                  <h2 className="nav-link" onClick={handleConfirmDelete}>
+                    Logout
+                  </h2>
+                </li>
               </ul>
             </div>
           </div>
         </nav>
       )}
       <Routes>
-        <Route exact path="/" element={<LoginUser />} />
-        <Route path="/sign-in" element={<LoginUser />} />
+        <Route
+          exact
+          path="/"
+          element={<LoginUser handleLogout={handleLogout} />}
+        />
+        <Route
+          exact
+          path="/log-out"
+          element={<LoginUser handleLogout={handleLogout} />}
+        />
+        <Route
+          path="/sign-in"
+          element={<LoginUser handleLogout={handleLogout} />}
+        />
+        <Route path="/leads" element={<LeadsPage />} />
         <Route path="/sign-up" element={<CreateUser />} />
         <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Home handleLogin={handleLogin} />} />
       </Routes>
     </div>
   );
